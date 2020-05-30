@@ -1,10 +1,29 @@
 use std::collections::HashSet;
+use std::convert::TryFrom;
 
 use rayon::prelude::*;
 
 pub mod image;
 
 pub use image::{Image, Rgb};
+
+pub fn generate_equally_spaced_rgb_colors(num_colors: usize) -> Vec<Rgb> {
+    let mut colors = Vec::with_capacity(num_colors.pow(3));
+
+    for ri in 0..num_colors {
+        for gi in 0..num_colors {
+            for bi in 0..num_colors {
+                colors.push((
+                    u8::try_from(ri * 255 / num_colors).unwrap(),
+                    u8::try_from(gi * 255 / num_colors).unwrap(),
+                    u8::try_from(bi * 255 / num_colors).unwrap(),
+                ));
+            }
+        }
+    }
+
+    colors
+}
 
 pub fn generate(
     mut colors: Vec<Rgb>,
