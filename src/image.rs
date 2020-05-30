@@ -24,12 +24,24 @@ impl<Pixel: Clone + Copy> Image<Pixel> {
         self.height
     }
 
+    #[inline(always)]
     pub fn get(&self, x: usize, y: usize) -> Pixel {
-        self.data[y * self.width + x]
+        if cfg!(debug_assertions) {
+            self.data[y * self.width + x]
+        } else {
+            unsafe { *self.data.get_unchecked(y * self.width + x) }
+        }
     }
 
-    pub fn set(&mut self, x: usize, y: usize, rgb: Pixel) {
-        self.data[y * self.width + x] = rgb;
+    #[inline(always)]
+    pub fn set(&mut self, x: usize, y: usize, pix: Pixel) {
+        if cfg!(debug_assertions) {
+            self.data[y * self.width + x] = pix;
+        } else {
+            unsafe {
+                *self.data.get_unchecked_mut(y * self.width + x) = pix;
+            }
+        }
     }
 
     pub fn for_each_neighbor(&self, x: usize, y: usize, mut fun: impl FnMut(usize, usize)) {
