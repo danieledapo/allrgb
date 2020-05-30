@@ -13,6 +13,10 @@ fn main() -> std::io::Result<()> {
     // let width = 512;
     // let height = 512;
 
+    // let num_colors: usize = 256;
+    // let width = 4096;
+    // let height = 4096;
+
     assert!(num_colors.pow(3) == width * height);
 
     let mut colors = Vec::with_capacity(num_colors.pow(3));
@@ -29,8 +33,16 @@ fn main() -> std::io::Result<()> {
     }
     colors.shuffle(&mut thread_rng());
 
+    let center_seed = vec![(width / 2, height / 2)];
+    // let corner_seeds = vec![
+    //     (width / 4, height / 4),
+    //     (width * 3 / 4, height / 4),
+    //     (width / 4, height * 3 / 4),
+    //     (width * 3 / 4, height * 3 / 4),
+    // ];
+
     let start_ts = std::time::Instant::now();
-    let img = allrgb::generate(colors, (width, height), (width / 2, height / 2));
+    let img = allrgb::generate(colors, (width, height), center_seed.into_iter().collect());
     println!("generation took {} secs", start_ts.elapsed().as_secs());
 
     let f = std::fs::File::create("img.ppm")?;

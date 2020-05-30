@@ -9,20 +9,23 @@ pub use image::{Image, Rgb};
 pub fn generate(
     mut colors: Vec<Rgb>,
     (width, height): (usize, usize),
-    (sx, sy): (usize, usize),
+    seeds: HashSet<(usize, usize)>,
 ) -> Image<Rgb> {
     assert!(colors.len() == width * height);
+    assert!(!seeds.is_empty());
 
     let mut img = Image::new((0, 0, 0), width, height);
     let mut seen = Image::new(false, width, height);
-
-    img.set(sx, sy, colors.pop().unwrap());
-    seen.set(sx, sy, true);
-
     let mut free = HashSet::new();
-    img.for_each_neighbor(sx, sy, |x, y| {
-        free.insert((x, y));
-    });
+
+    for (sx, sy) in seeds {
+        img.set(sx, sy, colors.pop().unwrap());
+        seen.set(sx, sy, true);
+
+        img.for_each_neighbor(sx, sy, |x, y| {
+            free.insert((x, y));
+        });
+    }
 
     while let Some(rgb) = colors.pop() {
         let &(x, y) = free
