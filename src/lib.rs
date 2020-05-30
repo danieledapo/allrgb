@@ -1,5 +1,7 @@
 use std::collections::HashSet;
 
+use rayon::prelude::*;
+
 pub mod image;
 
 pub use image::{Image, Rgb};
@@ -24,7 +26,7 @@ pub fn generate(
 
     while let Some(rgb) = colors.pop() {
         let &(x, y) = free
-            .iter()
+            .par_iter()
             .min_by_key(|&&(x, y)| {
                 let mut neighbors = 0;
                 let mut total_color_dist = 0;
