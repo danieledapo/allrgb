@@ -13,9 +13,8 @@ fn main() -> std::io::Result<()> {
     colors.shuffle(&mut thread_rng());
 
     let mut seeds = std::collections::HashSet::new();
-    seeds.insert((width / 4, height / 3));
+    seeds.insert((width / 2, height / 3));
     seeds.insert((width / 2, height / 2));
-    seeds.insert((width / 4 * 3, height / 3));
 
     let start_ts = std::time::Instant::now();
     let img = allrgb::generate(colors, (width, height), seeds);
