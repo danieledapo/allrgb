@@ -45,31 +45,17 @@ impl<Pixel: Clone + Copy> Image<Pixel> {
     }
 
     pub fn for_each_neighbor(&self, x: usize, y: usize, mut fun: impl FnMut(usize, usize)) {
-        if x > 0 && y > 0 {
-            fun(x - 1, y - 1);
-        }
         if x > 0 {
             fun(x - 1, y);
         }
-        if x > 0 && y + 1 < self.height {
-            fun(x - 1, y + 1);
-        }
-
         if y > 0 {
             fun(x, y - 1);
         }
         if y + 1 < self.height {
             fun(x, y + 1);
         }
-
-        if x + 1 < self.width && y > 0 {
-            fun(x + 1, y - 1);
-        }
         if x + 1 < self.width {
             fun(x + 1, y);
-        }
-        if x + 1 < self.width && y + 1 < self.height {
-            fun(x + 1, y + 1);
         }
     }
 }
